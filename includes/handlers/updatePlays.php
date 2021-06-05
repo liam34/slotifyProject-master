@@ -2,7 +2,6 @@
 
 include '../../config.php';
 
-// songId is got from 'nowPlayingBar.php'-Line 13, 26
 if(isset($_POST['songId'])) {
     $songId = $_POST['songId'];
 

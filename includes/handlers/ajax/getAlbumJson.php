@@ -2,7 +2,7 @@
 
 include '../../config.php';
 
-// albumId is got from 'nowPlayingBar.php'-Line 14, 26
+
 if(isset($_POST['albumId'])) {
     $albumId = $_POST['albumId'];
 
@@ -10,7 +10,6 @@ if(isset($_POST['albumId'])) {
 
     $resultArray = mysqli_fetch_assoc($query);   
 
-    // Converting and echoing PHP array ($resultArray) in JSON
     echo json_encode($resultArray);
 }
 

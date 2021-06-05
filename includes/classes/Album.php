@@ -24,16 +24,12 @@ class Album {
 
     }
     
-    // To access private class variables, you have to use public function
-    // Read more at: https://tinyurl.com/y7pwh3tz
+    
     public function getTitle() {
         return $this->title;        
     }
 
-    /*
-    * To get the Artist Name we have to make use of the Artist Class because
-    * the album table just has the artist id. The artist table is storing the Artist Name
-    */
+    
     public function getArtist() {
         return new Artist($this->con, $this->artistId);
     }
@@ -47,10 +43,10 @@ class Album {
     }
 
     public function getNumberOfSongs() {
-        /* By Reece: 
+        /* 
             $query = mysqli_query($this->con, "SELECT id FROM songs WHERE album='$this->id'");
             return mysqli_num_rows($query);*/
-        /* Else you can try the solution below also
+        /* 
             $query = mysqli_query($this->con, "SELECT COUNT(*) FROM songs WHERE album='$this->id'");
             return $result['COUNT(*)'];
         */
