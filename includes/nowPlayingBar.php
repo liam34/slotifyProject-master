@@ -3,78 +3,76 @@
 // Fetch songs to generate a random playlist
 $songQuery = mysqli_query($con, 'SELECT id FROM songs ORDER BY RAND() LIMIT 10');
 
-$resultArray = array();
-    
-while($row = mysqli_fetch_assoc($songQuery)) {
-  //Pushing the song Ids into $resultArray
-  array_push($resultArray, $row['id']);
-}
+  $resultArray = array();
+          
+      while($row = mysqli_fetch_assoc($songQuery)) {
+        //Pushing the song Ids into $resultArray
+        array_push($resultArray, $row['id']);
+      }
 
-$jsonArray = json_encode($resultArray);
-?>
+  $jsonArray = json_encode($resultArray);
+  ?>
 
 <script>
 
 $(document).ready(function() {
-  currentPlaylist = <?php echo $jsonArray; ?>;
-  // audioElement object
-  audioElement = new Audio();
-  
-  setTrack(currentPlaylist[0], currentPlaylist, false);
-  
-  updateVolumeProgressBar(audioElement.audio);
+      var newPlaylist = <?php echo $jsonArray; ?>;
+      // audioElement object
+      audioElement = new Audio();     
+      setTrack(newPlaylist[0], newPlaylist, false);     
+      updateVolumeProgressBar(audioElement.audio);
 
-  $("#nowPlayingBarContainer").on("mousedown touchstart mousemove touchmove", function(e) {
-   
-    e.preventDefault();
-  })
-  
-  // Progress bar controller
-  $(".playbackBar .progressBar").mousedown(function() {
-    mouseDown = true;
-  });
+        $("#nowPlayingBarContainer").on("mousedown touchstart mousemove touchmove", function(e) {
+        
+          e.preventDefault();
+        })
+        
+            // Progress bar controller
+            $(".playbackBar .progressBar").mousedown(function() {
+              mouseDown = true;
+            });
 
-  $(".playbackBar .progressBar").mousemove(function(e) {
-    if(mouseDown) {
+            $(".playbackBar .progressBar").mousemove(function(e) {
+              if(mouseDown) {
+                
+                timeFromOffset(e, this);
+              }
+            });
+
+            $(".playbackBar .progressBar").mouseup(function(e) {
+              timeFromOffset(e,this);   
+            });
+
+            $(document).mouseup(function() {
+              mouseDown = false;
+            });
+
       
-      timeFromOffset(e, this);
-    }
-  });
-
-  $(".playbackBar .progressBar").mouseup(function(e) {
-    timeFromOffset(e,this);   
-  });
-
-  $(document).mouseup(function() {
-    mouseDown = false;
-  });
-
- 
-  $(".volumeBar .progressBar").mousedown(function() {
-    mouseDown = true;
-  });
+        $(".volumeBar .progressBar").mousedown(function() {
+          mouseDown = true;
+        });
 
   $(".volumeBar .progressBar").mousemove(function(e) {
-    if(mouseDown) {
+          if(mouseDown) {
 
-      // this refers to .volumeBar .progressBar
-      var percentage =  e.offsetX / $(this).width();
+            // this refers to .volumeBar .progressBar
+            var percentage =  e.offsetX / $(this).width();
 
-      if(percentage >=0 && percentage <=1) {        
-        audioElement.audio.volume = percentage;
-      }      
-    }
-  });
+            if(percentage >=0 && percentage <=1) {        
+              audioElement.audio.volume = percentage;
+            }      
+          }
+        });
 
- 
-  $(".volumeBar .progressBar").mouseup(function(e) {
-   
-    var percentage =  e.offsetX / $(this).width();
+      
+        $(".volumeBar .progressBar").mouseup(function(e) {
+        
+          var percentage =  e.offsetX / $(this).width();
 
-    if(percentage >=0 && percentage <=1) {        
-        audioElement.audio.volume = percentage;
-      }
-  });
+          if(percentage >=0 && percentage <=1) {        
+              audioElement.audio.volume = percentage;
+            }
+        });
 });
 
 
@@ -87,100 +85,146 @@ function timeFromOffset(mouse, progressBar) {
 // Play Previous song
 function prevSong() {
 
-  if(audioElement.audio.currentTime >= 3) {
-    audioElement.setTime(0);
-  }
- 
-  else if(currentIndex == 0 && audioElement.audio.currentTime < 3) {
-    currentIndex = currentPlaylist.length - 1;
-    // console.log('INDEX = ' + currentIndex);
-    setTrack(currentPlaylist[currentIndex], currentPlaylist, true);
-  }
-  else {
+      if(audioElement.audio.currentTime >= 3) {
+        audioElement.setTime(0);
+      }
     
-    currentIndex = currentIndex - 1;
-    setTrack(currentPlaylist[currentIndex], currentPlaylist, true);
-  }
+      else if(currentIndex == 0 && audioElement.audio.currentTime < 3) {
+        currentIndex = currentPlaylist.length - 1;
+        // console.log('INDEX = ' + currentIndex);
+        setTrack(currentPlaylist[currentIndex], currentPlaylist, true);
+      }
+      else {
+        
+        currentIndex = currentIndex - 1;
+        setTrack(currentPlaylist[currentIndex], currentPlaylist, true);
+      }
 }
 
 
-// Paly Next song or Repeat song
-function nextSong() {
+            // Paly Next song or Repeat song
+            function nextSong() {
 
-  // Repeat Song
+            // Repeat Song
+            
+            if(repeat == true) {
+              
+            audioElement.setTime(0);
+            playSong();
+            return;
+            }
+
+            if(currentIndex == currentPlaylist.length-1) {
+              currentIndex = 0;
+            } else {
+              currentIndex++;
+            }
+          
+            var trackToPlay = shuffle ? shufflePlaylist[currentIndex] : currentPlaylist[currentIndex];
+            setTrack(trackToPlay, currentPlaylist, true);
+            
+          }
+
+
+          function setRepeat() {
+            repeat = !repeat;
+            var imageName = repeat ? "repeat-active.png" : "repeat.png";
+            $(".controlButton.repeat img").attr("src", "assets/images/icons/" + imageName);
+          }
+
+          function setMute() {
+            audioElement.audio.muted = !audioElement.audio.muted;
+            var imageName = audioElement.audio.muted ? "volume-mute.png" : "volume.png";
+            $(".controlButton.volume img").attr("src", "assets/images/icons/" + imageName);
+          }
+
+          function setShuffle() {
+           shuffle = !shuffle;
+            var imageName = shuffle ? "shuffle-active.png" : "shuffle.png";
+            $(".controlButton.shuffle img").attr("src", "assets/images/icons/" + imageName);
+
+            if(shuffle==true) {
+              //randomize playlist
+              shuffleArray(shufflePlaylist);
+              currentIndex = shufflePlaylist.indexOf(audioElement.currentlyPlayin.id);
+            }
+            else {
+              currentIndex = currentPlaylist.indexOf(audioElement.currentlyPlayin.id);
+            }
+          }
+
+          function shuffleArray(a) {
+          var j, x, i;
+          for (i = a.length; i; i--) {
+              j = Math.floor(Math.random() * i);
+              x = a[i - 1];
+              a[i -1] = a[j];
+              a[j] = x;
+          }
+      }
+
+
+function setTrack(trackId, newPlaylist, play) {  
   
-  if(repeat) {
-    
-    audioElement.setTime(0);
-    playSong();
-    return;
-  }
+      if(newPlaylist != currentPlaylist) {
+          currentPlaylist = newPlaylist;
+          shufflePlaylist = currentPlaylist.slice();
+          shuffleArray(shufflePlaylist);
+      }
 
-  if(currentIndex == currentPlaylist.length-1) {
-    currentIndex = 0;
-  } else {
-    currentIndex++;
-  }
- 
-  var trackToPlay = currentPlaylist[currentIndex];
-  setTrack(trackToPlay, currentPlaylist, true);
-}
+      if(shuffle == true) {
+        currentIndex = shufflePlaylist.indexOf(trackId);
+      }
+      else {
+        currentIndex = currentPlaylist.indexOf(trackId);
+      }
+      pauseSong();
 
+          $.post("includes/handlers/ajax/getSongJson.php", { songId: trackId }, function(data) {   
 
-function setRepeat() {
-  repeat = !repeat;
-  var imageName = repeat ? "repeat-active.png" : "repeat.png";
-  
-  $(".controlButton.repeat img").attr("src", "assets/images/icons/" + imageName);
-}
+            var track = JSON.parse(data);
 
+            $(".trackName span").text(track.title);
 
-function setTrack(trackId, newPlaylist, play) {    
-  currentIndex = currentPlaylist.indexOf(trackId);
-  pauseSong();
+            $.post("includes/handlers/ajax/getArtistJson.php", { artistId: track.artist }, function(data) {
+              var artist = JSON.parse(data);
 
-  $.post("includes/handlers/ajax/getSongJson.php", { songId: trackId }, function(data) {   
+              $(".artistName span").text(artist.name);
+            });
 
-    var track = JSON.parse(data);
+            $.post("includes/handlers/ajax/getAlbumJson.php", { albumId: track.album }, function(data) {
+              var album = JSON.parse(data);
+            
+              $(".albumLink img").attr("src", album.artworkPath);      
+            }); 
 
-    $(".trackName span").text(track.title);
+            audioElement.setTrack(track);
+            playSong();
+          });
 
-    $.post("includes/handlers/ajax/getArtistJson.php", { artistId: track.artist }, function(data) {
-      var artist = JSON.parse(data);
-      $(".artistName span").text(artist.name);
-    });
-
-    $.post("includes/handlers/ajax/getAlbumJson.php", { albumId: track.album }, function(data) {
-      var album = JSON.parse(data);
-     
-      $(".albumLink img").attr("src", album.artworkPath);      
-    }); 
-
-    audioElement.setTrack(track);
-    playSong();
-  });
-
-  if(play) {
-    audioElement.play();
-  }
+          if(play) {
+            audioElement.play();
+          }
 }
 
 function playSong() {
-  if(audioElement.audio.currentTime === 0) {
-   
-    $.post("includes/handlers/ajax/updatePlays.php", { songId: audioElement.currentlyPlaying.id });   
-  }
-  
-  $(".controlButton.play").hide();
-  $(".controlButton.pause").show();
-  audioElement.play();
-}
 
-function pauseSong() {
-  $(".controlButton.play").show();
-  $(".controlButton.pause").hide();
-  audioElement.pause();
-}
+        if(audioElement.audio.currentTime === 0) {
+        
+          $.post("includes/handlers/ajax/updatePlays.php", { songId: audioElement.currentlyPlaying.id });   
+        }
+        
+        $(".controlButton.play").hide();
+        $(".controlButton.pause").show();
+        audioElement.play();
+      }
+
+      function pauseSong() {
+        $(".controlButton.play").show();
+        $(".controlButton.pause").hide();
+        audioElement.pause();
+
+      }
 </script>
       
 <div id="nowPlayingBarContainer">
@@ -212,7 +256,7 @@ function pauseSong() {
       <div class="content playerControls">
 
         <div class="buttons">
-          <button class="controlButton shuffle" title="Shuffle">
+          <button class="controlButton shuffle" title="Shuffle button" onclick="setShuffle()">
             <img src="assets/images/icons/shuffle.png" alt="Shuffle">
           </button>
 
@@ -257,7 +301,7 @@ function pauseSong() {
 
         <div class="volumeBar">
 
-          <button class="controlButton volume" title="Volume button">
+          <button class="controlButton volume" title="Volume button" onclick="setMute()">
             <img src="assets/images/icons/volume.png" alt="Volume">
           </button>
           
