@@ -19,7 +19,7 @@ include ("includes/includedFiles.php");
                 <img src='" . $row['artworkPath'] . "'>              
                 
                 <div class='gridViewInfo'>"
-                  .$row['title']. 
+                  . $row['title']. 
                 "</div>
               </span>                      
             </div>";

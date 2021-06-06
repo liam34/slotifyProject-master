@@ -63,7 +63,7 @@ class Album {
        
         $array = array();
 
-        while($row = mysqli_fetch_assoc($query)) {
+        while($row = mysqli_fetch_array($query)) {
              array_push($array, $row['id']);
         }
 
