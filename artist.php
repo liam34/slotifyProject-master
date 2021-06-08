@@ -22,7 +22,7 @@
             <h1 class="artistName"><?php echo $artist->getName(); ?></h1>
 
             <div class="headerButtons">
-                    <button class="button green" onclick="playFirstSong()">PLAY</button>
+                    <button class="button slateblue" onclick="playFirstSong()">PLAY</button>
             </div>
 
             </div>
@@ -38,8 +38,8 @@
         <?php
         $songIdArray = $artist->getSongIds();
 
-        $i = 1;
-        foreach($songIdArray as $songId) {
+            $i = 1;
+            foreach($songIdArray as $songId) {
 
             if($i > 5) {
                 break;
@@ -70,7 +70,7 @@
 
            $i++;
 
-        }
+             }
 
         ?>
 

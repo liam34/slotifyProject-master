@@ -39,7 +39,7 @@ $(function() {
 <div class="tracklistContainer borderBottom">
     <h2>SONGS</h2>
     <ul class="tracklist">
-
+        
         <?php
         $songsQuery = mysqli_query($con, "SELECT id FROM songs WHERE title LIKE '$term%' LIMIT 10");
 
@@ -60,7 +60,7 @@ $(function() {
 
             $albumSong = new Song($con, $row['id']);
             $albumArtist = $albumSong->getArtist();              
-            
+              //module 13.4---------------------------------------------------------------------------//
             echo "<li class='tracklistRow'>
                 <div class='trackCount'>
                     <img class='play' src='assets/images/icons/play-white.png' onclick='setTrack(\"" . $albumSong->getId() . "\", tempPlaylist, true)'>
@@ -88,47 +88,48 @@ $(function() {
         ?>
 
         <script>
-
-            var tempSongsId = '<?php echo json_encode($songIdArray); ?>';
-            tempPlaylist = JSON.parse(tempSongsId);
+            //look where he var tempSongsIds create or used.
+            var tempSongsIds = '<?php echo json_encode($songIdArray); ?>';
+            tempPlaylist = JSON.parse(tempSongsIds);
 
         </script>
     
-    </div>
+    
 
 </div>
 
-<div class="artistContainer borderBottom">
+<div class="artistsContainer borderBottom">
 
     <h2>ARTISTS</h2>
 
     <?php
-    $artistsQuery = mysqli_query($con, "SELECT id FROM artists WHERE name LIKE '$term%' LIMIT 10");
+        $artistsQuery = mysqli_query($con, "SELECT id FROM artists WHERE name LIKE '$term%' LIMIT 10");
 
-    if(mysqli_num_rows($artistsQuery) == 0) {
-        echo "<span class='noResults'>No artist found matching " . $term . "</span>";
+        if(mysqli_num_rows($artistsQuery) == 0) {
+            echo "<span class='noResults'>No artist found matching " . $term . "</span>";
 
-    }
+            }
 
-    while($row = mysqli_fetch_array($artistsQuery)) {
+        while($row = mysqli_fetch_array($artistsQuery)) {
+
         $artistFound = new Artist($con, $row['id']);
 
         echo "<div class='searchResultRow'>
-              <div class='artistName'>
+                <div class='artistName'>
 
-                  <span role='link' tabindex='0' onclick='openPage(\"artist.php?id=" . $artistFound->getId() . "\")'>
-                  "
-                    . $artistFound->getName() .
-                  "
-                  </span>
+                    <span role='link' tabindex='0' onclick='openPage(\"artist.php?id=" . $artistFound->getId() ."\")'>
+                    " 
+                    . $artistFound->getName() . 
+                    
+                    "</span>
 
                 </div>
-        
               </div>";
-    }
+        }
 
 
     ?>
+
 </div>
 
 <div class="gridViewContainer">

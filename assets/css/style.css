@@ -309,9 +309,9 @@ Album
     min-width: 130px;
 }
 
-.button.green {
-    background-color: #2ebd59;
-    border-color: #2ebd59;
+.button.slateblue {
+    background-color: slateblue;
+    border-color:slateblue;
 }
 
 .borderBottom {
@@ -365,7 +365,7 @@ input:focus {
 
 .searchResultRow .artistName span {
     font-size: medium;
-    color: slategrey;
+    color: slateblue;
 
 }
 
