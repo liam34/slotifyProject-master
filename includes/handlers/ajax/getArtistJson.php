@@ -9,7 +9,7 @@ if(isset($_POST['artistId'])) {
 
     $resultArray = mysqli_fetch_assoc($query);    
 
-    // Converting and echoing PHP array ($resultArray) into JSON array
+   
     echo json_encode($resultArray);
 }
 

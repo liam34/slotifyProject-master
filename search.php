@@ -44,7 +44,7 @@ $(function() {
         $songsQuery = mysqli_query($con, "SELECT id FROM songs WHERE title LIKE '$term%' LIMIT 10");
 
         if(mysqli_num_rows($songsQuery) == 0) {
-                echo "<span class='noResolts'>No songs found matching " . $term . "</span>";
+                echo "<span class='noResults'>No songs found matching " . $term . "</span>";
         }
 
         $songIdArray = array();
@@ -56,9 +56,9 @@ $(function() {
                 break;
             }
 
-            array_push($songIdArray, $rows['id']);
+            array_push($songIdArray, $row['id']);
 
-            $albumSong = new Song($con, $rows['id']);
+            $albumSong = new Song($con, $row['id']);
             $albumArtist = $albumSong->getArtist();              
             
             echo "<li class='tracklistRow'>
