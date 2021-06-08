@@ -333,9 +333,11 @@ Album
     padding: 20px 28px;
 }
 
-.searchContainer h4 {
+.searchContainer h2 {
     margin: 0%;
-    font-weight: 300;
+    font-weight: 400;
+    color: slategray;
+    
 }
 
 .searchContainer .searchInput {
@@ -351,6 +353,22 @@ Album
 input:focus {
     outline: none;
 }
+
+.searchResultRow {
+    padding: 15px 10px;
+    
+}
+
+.searchResultRow:hover {
+    background-color: #282828;
+}
+
+.searchResultRow .artistName span {
+    font-size: medium;
+    color: slategrey;
+
+}
+
 
 
 

@@ -183,21 +183,20 @@ function setTrack(trackId, newPlaylist, play) {
           $.post("includes/handlers/ajax/getSongJson.php", { songId: trackId }, function(data) {   
 
             var track = JSON.parse(data);
-
             $(".trackName span").text(track.title);
 
             $.post("includes/handlers/ajax/getArtistJson.php", { artistId: track.artist }, function(data) {
               var artist = JSON.parse(data);
-              $(".artistName span").text(artist.name);
-              //this link albumLink, songName and artist name to other php page//--error here@ 12.6 module
-              $(".artistName span").attr("onclick", "openPage('artist.php?id" + artist.id + "')")
+              $(".trackInfo .artistName span").text(artist.name);
+              //this link albumLink, songName and artist name to other php page from noPlayingBar
+              $(".trackInfo .artistName span").attr("onclick", "openPage('artist.php?id=" + artist.id + "')");
             });
 
             $.post("includes/handlers/ajax/getAlbumJson.php", { albumId: track.album }, function(data) {
               var album = JSON.parse(data);            
-              $(".albumLink img").attr("src", album.artworkPath);   
-              $(".albumLink img").attr("onclick", "openPage('album.php?id" + album.id + "')");
-              $(".trackName span").attr("onclick", "openPage('album.php?id" + album.id + "')");   
+              $(".content .albumLink img").attr("src", album.artworkPath);   
+              $(".content .albumLink img").attr("onclick", "openPage('album.php?id=" + album.id + "')");
+              $(".trackinfo .trackName span").attr("onclick", "openPage('album.php?id=" + album.id + "')");   
             }); 
 
             audioElement.setTrack(track);

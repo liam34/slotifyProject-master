@@ -9,6 +9,10 @@ class Artist {
         $this->con = $con;
         $this->id = $id;
     }
+
+    public function getId() {
+        return $this->id;
+    }
     
     // Return artist name
     public function getName() {
